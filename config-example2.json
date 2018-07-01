@@ -1,0 +1,77 @@
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "inbound": {
+    "port": 3128,
+    "listen": "YOUR_ROUTER_IP",
+    "protocol": "socks",
+    "settings": {
+      "udp": false
+    }
+  },
+  "inboundDetour": [
+    {
+      "port": 1080,
+      "listen": "YOUR_ROUTER_IP",
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "timeout": 30,
+        "followRedirect": true
+      }
+    }
+  ],
+  "outbound": {
+    "protocol": "vmess",
+    "settings": {
+      "vnext": [
+        {
+          "address": "YOUR_SERVER_IP",
+          "port": 443,
+          "users": [
+            {
+              "id": "5d7072bd-1566-b4c5-4921-c79da8d7e279",
+              "alterId": 10,
+              "security": "auto"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "outboundDetour": [
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    }
+  ],
+  "dns": {
+    "servers": [
+      "8.8.8.8",
+      "8.8.4.4",
+      "localhost"
+    ]
+  },
+  "routing": {
+    "strategy": "rules",
+    "settings": {
+      "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "type": "field",
+          "domain": [
+            "vultr.com",
+            "geosite:cn"
+          ],
+          "ip": [
+            "geoip:private",
+            "geoip:cn"
+          ],
+          "outboundTag": "direct"
+        }
+      ]
+    }
+  }
+}
